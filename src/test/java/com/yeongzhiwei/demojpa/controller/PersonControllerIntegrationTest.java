@@ -45,7 +45,7 @@ public class PersonControllerIntegrationTest {
     void getAll() throws Exception {
         List<Person> expected = TestUtil.createPersonList();
 
-        this.mockMvc.perform(get("/person"))
+        this.mockMvc.perform(get("/persons"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(expected.size()));
     }

@@ -31,7 +31,7 @@ public class PersonControllerTest {
         List<Person> persons = TestUtil.createPersonList();
         when(service.findAll()).thenReturn(persons);
         
-        this.mockMvc.perform(get("/person"))
+        this.mockMvc.perform(get("/persons"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(persons.size()));
     }
