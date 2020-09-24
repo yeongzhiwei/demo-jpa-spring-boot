@@ -8,11 +8,15 @@ import com.yeongzhiwei.demojpa.domain.Person;
 public class TestUtil {
 
     public static Person createPerson() {
-        return new Person("Adam");
+        Person person = new Person();
+        person.setName("Adam");
+        return person;
     }
 
     public static Person createPerson2() {
-        return new Person("Ben");
+        Person person = new Person();
+        person.setName("Ben");
+        return person;
     }
 
     public static List<Person> createPersonList() {
