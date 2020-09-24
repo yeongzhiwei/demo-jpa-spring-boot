@@ -1,11 +1,13 @@
 package com.yeongzhiwei.demojpa.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import com.yeongzhiwei.demojpa.domain.Person;
 import com.yeongzhiwei.demojpa.dto.PersonRequest;
+import com.yeongzhiwei.demojpa.dto.PersonResponse;
 import com.yeongzhiwei.demojpa.service.PersonService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,28 +32,34 @@ public class PersonController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public List<Person> getAll() {
-        return personService.findAll();
+    public List<PersonResponse> getAll() {
+        return personService.findAll()
+            .stream()
+            .map(PersonResponse::fromDomain)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public Person get(@PathVariable Long id) {
-        return personService.find(id);
+    public PersonResponse get(@PathVariable Long id) {
+        Person person = personService.find(id);
+        return PersonResponse.fromDomain(person);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Person create(@RequestBody @Valid final PersonRequest request) {
-        return personService.create(new Person(request.getName()));
+    public PersonResponse create(@RequestBody @Valid final PersonRequest request) {
+        Person person = personService.create(PersonRequest.toDomain(request));
+        return PersonResponse.fromDomain(person);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Person update(
+    public PersonResponse update(
             @PathVariable Long id,
             @RequestBody @Valid final PersonRequest request) {
-        return personService.update(id, new Person(request.getName()));
+        Person person = personService.update(id, PersonRequest.toDomain(request));
+        return PersonResponse.fromDomain(person);
     }
 
     @DeleteMapping

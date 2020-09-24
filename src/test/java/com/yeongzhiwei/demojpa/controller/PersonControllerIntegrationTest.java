@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeongzhiwei.demojpa.TestUtil;
 import com.yeongzhiwei.demojpa.domain.Person;
 import com.yeongzhiwei.demojpa.dto.PersonRequest;
+import com.yeongzhiwei.demojpa.dto.PersonResponse;
 import com.yeongzhiwei.demojpa.repository.PersonRepository;
 
 import org.junit.jupiter.api.AfterEach;
@@ -93,7 +94,7 @@ public class PersonControllerIntegrationTest {
             .andReturn()
             .getResponse()
             .getContentAsString();
-        Person actual = objectMapper.readValue(response, Person.class);
+        PersonResponse actual = objectMapper.readValue(response, PersonResponse.class);
 
         assertTrue(repository.findById(actual.getId()).isPresent());
     }
