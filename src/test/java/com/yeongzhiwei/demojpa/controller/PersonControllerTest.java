@@ -36,4 +36,6 @@ public class PersonControllerTest {
             .andExpect(jsonPath("$.length()").value(persons.size()));
     }
 
+    // This class is not updated beyond testing getAll(). See PersonControllerIntegrationTest instead.
+
 }
