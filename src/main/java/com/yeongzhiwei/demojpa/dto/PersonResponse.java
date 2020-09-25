@@ -1,9 +1,14 @@
 package com.yeongzhiwei.demojpa.dto;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yeongzhiwei.demojpa.domain.Email;
 import com.yeongzhiwei.demojpa.domain.Person;
+
+import org.springframework.util.ObjectUtils;
 
 import lombok.Data;
 
@@ -13,8 +18,8 @@ public class PersonResponse {
 
     private Long id;
     private String name;
-    @JsonProperty("spouse_id")
     private Long spouseId;
+    private Set<Long> emailIds;
 
     public static PersonResponse fromDomain(Person person) {
         PersonResponse response = new PersonResponse();
@@ -28,6 +33,13 @@ public class PersonResponse {
         if (person.getSpouse() != null) {
             response.setSpouseId(person.getSpouse().getId());
         }
+        if (!ObjectUtils.isEmpty(person.getEmails())) {
+            response.setEmailIds(person.getEmails()
+                                              .stream()
+                                              .map(Email::getId)
+                                              .collect(Collectors.toSet()));
+        }
+        
         return response;
     }
 
