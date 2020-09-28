@@ -19,6 +19,7 @@ public class DetailedPersonResponse {
     private String name;
     private PersonResponse spouse;
     private Set<EmailResponse> emails;
+    private Set<AddressResponse> addresses;
 
     public static DetailedPersonResponse fromDomain(Person person) {
         DetailedPersonResponse response = new DetailedPersonResponse();
@@ -34,6 +35,9 @@ public class DetailedPersonResponse {
         }
         if (!ObjectUtils.isEmpty(person.getEmails())) {
             response.setEmails(person.getEmails().stream().map(EmailResponse::fromDomain).collect(Collectors.toSet()));
+        }
+        if (!ObjectUtils.isEmpty(person.getAddresses())) {
+            response.setAddresses(person.getAddresses().stream().map(AddressResponse::fromDomain).collect(Collectors.toSet()));
         }
 
         return response;

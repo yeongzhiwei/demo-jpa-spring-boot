@@ -1,7 +1,9 @@
 package com.yeongzhiwei.demojpa.config;
 
+import com.yeongzhiwei.demojpa.domain.Address;
 import com.yeongzhiwei.demojpa.domain.Email;
 import com.yeongzhiwei.demojpa.domain.Person;
+import com.yeongzhiwei.demojpa.repository.AddressRepository;
 import com.yeongzhiwei.demojpa.repository.EmailRepository;
 import com.yeongzhiwei.demojpa.repository.PersonRepository;
 
@@ -18,7 +20,11 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class SeedData {
     
     @Bean
-    public CommandLineRunner seedPersonRepo(TransactionTemplate transactionTemplate, PersonRepository personRepository, EmailRepository emailRepository) {
+    public CommandLineRunner seedPersonRepo(
+            TransactionTemplate transactionTemplate, 
+            PersonRepository personRepository, 
+            EmailRepository emailRepository,
+            AddressRepository addressRepository) {
         return args -> {
             Person person1 = new Person();
             person1.setName("Adam");
@@ -43,6 +49,16 @@ public class SeedData {
             email2.setAddress("good@bye.com");
             email2.setOwner(person1);
 
+            Address address1 = new Address();
+            address1.setPostalCode(111111);
+            address1.addOccupier(person1);
+            address1.addOccupier(person2);
+
+            Address address2 = new Address();
+            address2.setPostalCode(222222);
+            address2.addOccupier(person2);
+            address2.addOccupier(person3);
+
             transactionTemplate.execute(new TransactionCallbackWithoutResult(){
                 @Override
                 public void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
@@ -52,6 +68,8 @@ public class SeedData {
                     personRepository.save(person4);
                     emailRepository.save(email1);
                     emailRepository.save(email2);
+                    addressRepository.save(address1);
+                    addressRepository.save(address2);
                 }
             });
         };

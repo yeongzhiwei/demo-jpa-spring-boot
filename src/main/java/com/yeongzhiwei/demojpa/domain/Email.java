@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"owner"})
 public class Email extends AbstractEntity {
     
     @Column(nullable = false)

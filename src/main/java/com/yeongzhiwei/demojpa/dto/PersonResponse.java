@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.yeongzhiwei.demojpa.domain.Address;
 import com.yeongzhiwei.demojpa.domain.Email;
 import com.yeongzhiwei.demojpa.domain.Person;
 
@@ -20,6 +21,7 @@ public class PersonResponse {
     private String name;
     private Long spouseId;
     private Set<Long> emailIds;
+    private Set<Long> addressIds;
 
     public static PersonResponse fromDomain(Person person) {
         PersonResponse response = new PersonResponse();
@@ -35,9 +37,15 @@ public class PersonResponse {
         }
         if (!ObjectUtils.isEmpty(person.getEmails())) {
             response.setEmailIds(person.getEmails()
-                                              .stream()
-                                              .map(Email::getId)
-                                              .collect(Collectors.toSet()));
+                                            .stream()
+                                            .map(Email::getId)
+                                            .collect(Collectors.toSet()));
+        }
+        if (!ObjectUtils.isEmpty(person.getAddresses())) {
+            response.setAddressIds(person.getAddresses()
+                                            .stream()
+                                            .map(Address::getId)
+                                            .collect(Collectors.toSet()));
         }
         
         return response;
