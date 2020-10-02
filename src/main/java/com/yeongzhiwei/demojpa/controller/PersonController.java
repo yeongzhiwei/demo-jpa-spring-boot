@@ -56,7 +56,7 @@ public class PersonController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public PersonResponse create(@RequestBody @Valid final PersonRequest request) {
-        Person person = personService.createPerson(PersonRequest.toDomain(request));
+        Person person = personService.createPerson(PersonRequest.toDomain(request), request.getSpouseId());
         return PersonResponse.fromDomain(person);
     }
 
@@ -65,7 +65,7 @@ public class PersonController {
     public PersonResponse update(
             @PathVariable Long id,
             @RequestBody @Valid final PersonRequest request) {
-        Person person = personService.updatePerson(id, PersonRequest.toDomain(request));
+        Person person = personService.updatePerson(id, PersonRequest.toDomain(request), request.getSpouseId());
         return PersonResponse.fromDomain(person);
     }
 

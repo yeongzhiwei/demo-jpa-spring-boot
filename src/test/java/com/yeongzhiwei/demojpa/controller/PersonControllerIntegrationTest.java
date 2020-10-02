@@ -83,7 +83,8 @@ public class PersonControllerIntegrationTest {
 
     @Test
     void createPerson() throws Exception {
-        PersonRequest person = new PersonRequest("Zach");
+        PersonRequest person = new PersonRequest();
+        person.setName("Zach");
 
         String response = this.mockMvc.perform(post("/persons")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -103,7 +104,8 @@ public class PersonControllerIntegrationTest {
     void updateExistingPerson() throws Exception {
         Person person = TestUtil.createPerson();
         person = repository.save(person);
-        PersonRequest personRequest = new PersonRequest("Zach");
+        PersonRequest personRequest = new PersonRequest();
+        personRequest.setName("Zach");
 
         this.mockMvc.perform(put("/persons/" + person.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -117,7 +119,8 @@ public class PersonControllerIntegrationTest {
 
     @Test
     void updateNonExistingPerson() throws Exception {
-        PersonRequest person = new PersonRequest("Zach");
+        PersonRequest person = new PersonRequest();
+        person.setName("Zach");
 
         this.mockMvc.perform(put("/persons/999")
                 .contentType(MediaType.APPLICATION_JSON)

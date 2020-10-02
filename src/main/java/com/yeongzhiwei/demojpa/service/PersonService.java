@@ -7,12 +7,14 @@ import com.yeongzhiwei.demojpa.domain.Email;
 import com.yeongzhiwei.demojpa.domain.Person;
 import com.yeongzhiwei.demojpa.exception.EmailNotFoundException;
 import com.yeongzhiwei.demojpa.exception.PersonNotFoundException;
+import com.yeongzhiwei.demojpa.exception.SpouseNotFoundException;
 import com.yeongzhiwei.demojpa.repository.EmailRepository;
 import com.yeongzhiwei.demojpa.repository.PersonRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Service
 public class PersonService {
@@ -33,8 +35,51 @@ public class PersonService {
         return personRepository.findById(personId).orElseThrow(PersonNotFoundException::new);
     }
 
-    public Person createPerson(Person person) {
-        return personRepository.save(person);
+    public Person createPerson(Person person, Long spouseId) {
+        if (ObjectUtils.isEmpty(spouseId)) {
+            return personRepository.save(person);
+        }
+        return setSpouse(person, spouseId);
+    }
+
+    public Person updatePerson(Long personId, Person person, Long spouseId) {
+        Person savedPerson = this.findPerson(personId);
+        savedPerson.setName(person.getName());
+
+        if (ObjectUtils.isEmpty(spouseId)) {
+            return personRepository.save(savedPerson);
+        }
+        return setSpouse(savedPerson, spouseId);
+    }
+
+    public Person setSpouse(Person person, Long spouseId) {
+        Person spouse;
+        try {
+            spouse = findPerson(spouseId);
+        } catch (PersonNotFoundException ex) {
+            throw new SpouseNotFoundException();
+        }
+
+        Person oldSpouse = person.getSpouse();
+        Person spouseOldSpouse = spouse.getSpouse();
+
+        person.setSpouse(spouse);
+        person = personRepository.save(person);
+
+        spouse.setSpouse(person);
+        personRepository.save(spouse);
+
+        if (oldSpouse != null) {
+            oldSpouse.setSpouse(null);
+            personRepository.save(oldSpouse);
+        }
+
+        if (spouseOldSpouse != null) {
+            spouseOldSpouse.setSpouse(null);
+            personRepository.save(spouseOldSpouse);
+        }
+
+        return person;
     }
 
     public Person updatePerson(Long personId, Person person) {
