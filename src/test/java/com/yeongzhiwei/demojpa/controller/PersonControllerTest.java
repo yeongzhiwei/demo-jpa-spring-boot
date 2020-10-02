@@ -29,7 +29,7 @@ public class PersonControllerTest {
     @Test
     void getAll() throws Exception {
         List<Person> persons = TestUtil.createPersonList();
-        when(service.findAll()).thenReturn(persons);
+        when(service.findAllPersons()).thenReturn(persons);
         
         this.mockMvc.perform(get("/persons"))
             .andExpect(status().isOk())

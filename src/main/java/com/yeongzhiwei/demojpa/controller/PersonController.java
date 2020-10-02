@@ -37,15 +37,15 @@ public class PersonController {
     @ResponseStatus(code = HttpStatus.OK)
     public List<?> getAll(@RequestParam(name = "expand", required = false) String expand) {
         if (expand == null) {
-            return personService.findAll().stream().map(PersonResponse::fromDomain).collect(Collectors.toList());
+            return personService.findAllPersons().stream().map(PersonResponse::fromDomain).collect(Collectors.toList());
         } else {
-            return personService.findAll().stream().map(DetailedPersonResponse::fromDomain).collect(Collectors.toList());
+            return personService.findAllPersons().stream().map(DetailedPersonResponse::fromDomain).collect(Collectors.toList());
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable Long id, @RequestParam(name = "expand", required = false) String expand) {
-        Person person = personService.find(id);
+        Person person = personService.findPerson(id);
         if (expand == null) {
             return ResponseEntity.status(HttpStatus.OK).body(PersonResponse.fromDomain(person));
         } else {
@@ -56,7 +56,7 @@ public class PersonController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public PersonResponse create(@RequestBody @Valid final PersonRequest request) {
-        Person person = personService.create(PersonRequest.toDomain(request));
+        Person person = personService.createPerson(PersonRequest.toDomain(request));
         return PersonResponse.fromDomain(person);
     }
 
@@ -65,20 +65,20 @@ public class PersonController {
     public PersonResponse update(
             @PathVariable Long id,
             @RequestBody @Valid final PersonRequest request) {
-        Person person = personService.update(id, PersonRequest.toDomain(request));
+        Person person = personService.updatePerson(id, PersonRequest.toDomain(request));
         return PersonResponse.fromDomain(person);
     }
 
     @DeleteMapping
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteAll() {
-        personService.deleteAll();
+        personService.deleteAllPersons();
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        personService.delete(id);
+        personService.deletePerson(id);
     }
 
 } 

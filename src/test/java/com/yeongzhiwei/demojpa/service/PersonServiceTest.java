@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.yeongzhiwei.demojpa.TestUtil;
 import com.yeongzhiwei.demojpa.domain.Person;
+import com.yeongzhiwei.demojpa.repository.EmailRepository;
 import com.yeongzhiwei.demojpa.repository.PersonRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,20 +20,23 @@ class PersonServiceTest {
     private PersonService service;
 
     @Mock
-    private PersonRepository repository;
+    private PersonRepository personRepository;
+
+    @Mock
+    private EmailRepository emailRepository;
     
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        service = new PersonService(repository);
+        service = new PersonService(personRepository, emailRepository);
 
-        when(repository.findAll()).thenReturn(TestUtil.createPersonList());
+        when(personRepository.findAll()).thenReturn(TestUtil.createPersonList());
     }
 
     @Test
     void testFindAll() {
         List<Person> expected = TestUtil.createPersonList();
-        List<Person> actual = service.findAll();
+        List<Person> actual = service.findAllPersons();
         assertEquals(expected, actual);
     }
 
